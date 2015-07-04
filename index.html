@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>batch CSS changes from JS</title>
+</head>
+<body>
+<p id="p">hey there <a id="a" href="">bro</a></p>
+<script>
+
+function highlight(el) {
+  this.highlighter = window.highlighter;
+
+  var rect = el.getBoundingClientRect();
+  var top = rect.top + window.scrollY + 'px';
+  var left = rect.left + window.scrollX + 'px';
+  var width = el.offsetWidth + 'px';
+  var height = el.offsetHeight + 'px';
+
+  if (this.highlighter) {
+    console.log('updating only top, left, width, height');
+    this.highlighter.style.cssText += `
+      top: ${top};
+      left: ${left};
+      width: ${width};
+      height: ${height};
+    `;
+  } else {
+    var div = document.createElement('div');
+    document.body.appendChild(div);
+    this.highlighter = div;
+    this.highlighter.style.cssText = `
+      box-sizing: border-box;
+      position: absolute;
+      top: ${top};
+      left: ${left};
+      width: ${width};
+      height: ${height};
+      pointer-events: none;
+      outline: 5px solid hsl(200, 89%, 50%);
+      zIndex: 2147483647;
+    `;
+  }
+}
+
+document.body.addEventListener('click', function (e) {
+  e.preventDefault();
+  highlight(e.target);
+});
+
+</script>
+</body>
+</html>
